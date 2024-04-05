@@ -1,14 +1,61 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
+const uuid = require("uuid");
 
-const userSchema = new mongoose.Schema({
-  name: {
+const UserSchema = new mongoose.Schema({
+  userId: {
     type: String,
-    required: [true, "Please tell us your name!"],
+    default: uuid.v4,
   },
-  // etc. think of other fields
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String, // You missed the type definition here
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true, // Ensure email is unique
+    validate: {
+      validator: function(value) {
+        // Use a regular expression to check for a valid email format.
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      },
+      message: 'Invalid email format.'
+    }
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female'],
+    required: true
+  },
+  address: {
+    street: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    postalCode: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+  }
 });
 
-const User = mongoose.model("User", userSchema);
+// Specify the name of the database collection in the model
+const UserModel = mongoose.model("UserModel", UserSchema, "UrbanSnitchUsers");
 
-module.exports = User;
+module.exports = UserModel;

@@ -1,53 +1,59 @@
+const userModel = require('../models/userModel');
+
+const SUCCESS_MESSAGE = 'Data fetched successfully';
+const FAILURE_MESSAGE = 'Some error fetching the data';
+
 // GET /users
-const getUsers = (req, res) => {
-  // Logic to fetch all users from the database
-  // Example: const users = await User.find();
-  // Return the users as a response
-  // Example: res.json(users);
-  console.log("ACCESSED ALL USERS SUCCESSFULLY")
+exports.getUsers = async (req, res) => {
+  try {
+    const allUsers = await userModel.find({});
+    res.status(200).json({ result : allUsers, status: true, message: SUCCESS_MESSAGE});
+  } catch(err) {
+    res.status(400).json({ error: err,status: false,message:FAILURE_MESSAGE});
+  }
 };
 
 // GET /users/:id
-const getUserById = (req, res) => {
-  const userId = req.params.id;
-  // Logic to fetch a user by ID from the database
-  // Example: const user = await User.findById(userId);
-  // Return the user as a response
-  // Example: res.json(user);
+exports.getUserById = async (req, res) => {
+  const _id = Object(req.params.id);
+  try {
+    const user = await userModel.find({ _id });
+    res.status(200).json({ result: user, status: true, message:SUCCESS_MESSAGE });
+  } catch(err) {
+    res.status(500).json({ error: err,status: false,message:FAILURE_MESSAGE });
+  }
 };
 
 // POST /users
-const createUser = (req, res) => {
-  const { name, email, password } = req.body;
-  // Logic to create a new user in the database
-  // Example: const newUser = await User.create({ name, email, password });
-  // Return the newly created user as a response
-  // Example: res.json(newUser);
+exports.createUser = async (req, res) => {
+  const userReq = req.body;
+  try {
+    await userModel.create(userReq);
+    res.status(200).json({ result: user, status: true, message:SUCCESS_MESSAGE });
+  } catch(err) {
+    res.status(400).json( { error:err,status:false,message:FAILURE_MESSAGE });
+  }
 };
 
 // PUT /users/:id
-const updateUser = (req, res) => {
-  const userId = req.params.id;
-  const { name, email, password } = req.body;
-  // Logic to update a user by ID in the database
-  // Example: const updatedUser = await User.findByIdAndUpdate(userId, { name, email, password }, { new: true });
-  // Return the updated user as a response
-  // Example: res.json(updatedUser);
+exports.updateUser = async (req, res) => {
+  const _id = Object(req.params.id);
+  const data = req.body;
+  try {
+    const updatedUser = await userModel.updateOne({ _id},{$set:data});
+    res.status(200).json({ result : updatedUser, status: true, message: 'User updated successuflly.'})    
+  } catch(err) {
+    res.status(500).json({ result : err, status:false, message: 'Failed to update the user.'});
+  }
 };
 
 // DELETE /users/:id
-const deleteUser = (req, res) => {
-  const userId = req.params.id;
-  // Logic to delete a user by ID from the database
-  // Example: await User.findByIdAndDelete(userId);
-  // Return a success message as a response
-  // Example: res.json({ message: 'User deleted successfully' });
-};
-
-module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
+exports.deleteUser = async (req, res) => {
+  const { _id } = Object(req.params.id);
+  try {
+    const deletedUser = await userModel.findOneAndDelete({ _id });
+    res.status(200).json({ result: deletedUser, status: true, message: 'User has been deleted successfully.' });
+  } catch(err) {
+    res.status(500).json({ result: err, status: false, message:'Failed to delete the user.'});
+  }
 };
