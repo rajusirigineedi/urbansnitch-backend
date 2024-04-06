@@ -6,18 +6,17 @@ const userRouter = require('./routes/userRoutes');
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const URL = process.env.DATABASE_URL;
-const url = 'mongodb+srv://savenotes:savehere123@notes.dckjsam.mongodb.net/?retryWrites=true&w=majority';
 app.use(express.json());
 app.use(cors());
+console.log(URL);
 mongoose.connect(
-    url,
+    URL,
     {
-        useNewUrlParser:true,
-        useUnifiedTopology:true,
+        useNewUrlParser:true
     })
     .then(() => console.log("Connected to database successfully"))
     .catch((err) => console.log("Failed to connect to database",err));
 app.use(userRouter);
 app.listen(PORT,() => {
-    console.log('server is running');
+    console.log('server is running at port:'+PORT);
 });

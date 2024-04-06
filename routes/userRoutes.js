@@ -14,13 +14,13 @@ router.get('/users', userController.getUsers);
 router.post('/user', userController.createUser);
 
 // GET /users/:id
-router.get('/:id', userController.getUserById);
+router.get('/user/:id', userController.getUserById);
 
 // PUT /users/:id
-router.put('/:id', userController.updateUser);
+router.put('/user/:id', userController.updateUser);
 
 // DELETE /users/:id
-router.delete('/:id', userController.deleteUser);
+router.delete('/user/:id', userController.deleteUser);
 
 router.get('/*',(req,res) => {
     res.status(404).json({error:'No data here'});
