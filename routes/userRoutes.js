@@ -11,7 +11,7 @@ const userController = require('../controllers/userController');
 router.get('/users', userController.getUsers);
 
 // POST /users
-router.post('/user', userController.createUser);
+router.post('/users', userController.createUser);
 
 // GET /users/:id
 router.get('/user/:id', userController.getUserById);
